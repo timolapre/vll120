@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { SupabaseClient, createClient } from '@supabase/supabase-js'
+
 export default {
   data() {
     return {
@@ -46,7 +48,8 @@ export default {
       namesUpstairswc: ["Floris", "Eveline", "Maaike", "Sterre", "Hugo"],
     };
   },
-  mounted() {
+  async mounted() {
+    await this.getNames()
     this.getCleanScheduleMessage();
   },
   watch: {
@@ -55,6 +58,29 @@ export default {
     },
   },
   methods: {
+    async getNames() {
+      if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+        throw new Error('Database not configured')
+      }
+
+      const supabase = createClient(
+        process.env.SUPABASE_URL ?? '',
+        process.env.SUPABASE_ANON_KEY ?? ''
+      )
+
+      const names = await supabase.from('roommates').select("name").order('id')
+      console.log(names.data)
+      this.namesDownstairs = []
+      for (let i = 0; i < 5; i++) {
+        this.namesDownstairs.push(names.data[i].name);
+      }
+      this.namesUpstairs = []
+      for (let i = 5; i < 10; i++) {
+        this.namesUpstairs.push(names.data[i].name);
+      }
+      console.log(this.namesUpstairs)
+      console.log(this.namesDownstairs)
+    },
     CopyToClipboard() {
       const storage = document.createElement("textarea");
       const copyText = document.getElementById("rooster");
