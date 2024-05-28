@@ -80,6 +80,8 @@ export default {
       }
       console.log(this.namesUpstairs)
       console.log(this.namesDownstairs)
+      this.namesDownstairswc = [this.namesDownstairs[1], this.namesDownstairs[4], this.namesDownstairs[0], this.namesDownstairs[2], this.namesDownstairs[3]]
+      this.namesUpstairswc = [this.namesUpstairs[4], this.namesUpstairs[1], this.namesUpstairs[3], this.namesUpstairs[0], this.namesUpstairs[2]]
     },
     CopyToClipboard() {
       const storage = document.createElement("textarea");
